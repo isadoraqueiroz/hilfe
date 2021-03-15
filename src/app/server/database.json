@@ -1,0 +1,22 @@
+{
+    "patients":[
+        {
+        "id": "0",
+        "sexo": "Feminino",
+        "nascimento": "2011-12-02",
+        "comorbidade": "Sim",
+        "plano_de_saude": "Unimed",
+        "nome": "Fernanda",
+        "endereco":  "Rua dos Bobos"
+        },
+        {
+            "id": "1",
+            "sexo": "Masculino",
+            "nascimento": "1991-12-02",
+            "comorbidade": "Não",
+            "plano_de_saude": "SimplePlan",
+            "nome": "Mauricio",
+            "endereco": "Rua do Limoeiro" 
+        }
+    ]
+}
