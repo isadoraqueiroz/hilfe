@@ -1,69 +1,80 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from "@angular/common/http";
-import { HttpHeaders } from "@angular/common/http";
-
-import {  throwError } from 'rxjs';
-import {  Observable } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-
-import { Patients } from './patients';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { retry, catchError } from 'rxjs/operators';
+import { Patient } from './patient';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PatientService {
 
-  private apiServer = "http://localhost:3000";
-  httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json'
-    })
-  }
+  url = 'http://localhost:3000/patients'; // api rest fake
+
+  // injetando o HttpClient
   constructor(private httpClient: HttpClient) { }
 
-  create(patients): Observable<Patients> {
-    return this.httpClient.post<Patients>(this.apiServer + '/patients/', JSON.stringify(patients), this.httpOptions)
-    .pipe(
-      catchError(this.errorHandler)
-    )
-  }  
-  getById(id): Observable<Patients> {
-    return this.httpClient.get<Patients>(this.apiServer + '/patients/' + id)
-    .pipe(
-      catchError(this.errorHandler)
-    )
+  // Headers
+  httpOptions = {
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   }
 
-  getAll(): Observable<Patients[]> {
-    return this.httpClient.get<Patients[]>(this.apiServer + '/patients/')
-    .pipe(
-      catchError(this.errorHandler)
-    )
+  // Obtem todos os patientros
+  getPatients(): Observable<Patient[]> {
+    return this.httpClient.get<Patient[]>(this.url)
+      .pipe(
+        retry(2),
+        catchError(this.handleError))
   }
 
-  update(id, patients): Observable<Patients> {
-    return this.httpClient.put<Patients>(this.apiServer + '/patients/' + id, JSON.stringify(patients), this.httpOptions)
-    .pipe(
-      catchError(this.errorHandler)
-    )
+  // Obtem um patientro pelo id
+  getPatientById(id: number): Observable<Patient> {
+    return this.httpClient.get<Patient>(this.url + '/' + id)
+      .pipe(
+        retry(2),
+        catchError(this.handleError)
+      )
   }
 
-  delete(id){
-    return this.httpClient.delete<Patients>(this.apiServer + '/patients/' + id, this.httpOptions)
-    .pipe(
-      catchError(this.errorHandler)
-    )
+  // salva um patientro
+  savePatient(patient: Patient): Observable<Patient> {
+    return this.httpClient.post<Patient>(this.url, JSON.stringify(patient), this.httpOptions)
+      .pipe(
+        retry(2),
+        catchError(this.handleError)
+      )
   }
-  errorHandler(error) {
-     let errorMessage = '';
-     if(error.error instanceof ErrorEvent) {
-       // Get client-side error
-       errorMessage = error.error.message;
-     } else {
-       // Get server-side error
-       errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
-     }
-     console.log(errorMessage);
-     return throwError(errorMessage);
+
+  // utualiza um patientro
+  updatePatient(patient: Patient): Observable<Patient> {
+    return this.httpClient.put<Patient>(this.url + '/' + patient.id, JSON.stringify(patient), this.httpOptions)
+      .pipe(
+        retry(1),
+        catchError(this.handleError)
+      )
   }
+
+  // deleta um patientro
+  deletePatient(patient: Patient) {
+    return this.httpClient.delete<Patient>(this.url + '/' + patient.id, this.httpOptions)
+      .pipe(
+        retry(1),
+        catchError(this.handleError)
+      )
+  }
+
+  // Manipulação de erros
+  handleError(error: HttpErrorResponse) {
+    let errorMessage = '';
+    if (error.error instanceof ErrorEvent) {
+      // Erro ocorreu no lado do client
+      errorMessage = error.error.message;
+    } else {
+      // Erro ocorreu no lado do servidor
+      errorMessage = `Código do erro: ${error.status}, ` + `menssagem: ${error.message}`;
+    }
+    console.log(errorMessage);
+    return throwError(errorMessage);
+  };
+
 }

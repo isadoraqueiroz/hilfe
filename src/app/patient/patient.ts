@@ -1,4 +1,4 @@
-export interface Patients {
+export interface Patient {
     id: number;
     sexo: string,
     nascimento: string,
