@@ -1,3 +1,4 @@
+<!-- https://medium.com/@fernandoevangelista_28291/consumindo-api-rest-com-httpclient-no-angular-8-62c5d733ffb6 -->
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item active" aria-current="page">
@@ -6,9 +7,9 @@
   </ol>
 </nav>
 <div class="container">
-  <div class="patientd list-patient">
-    <h5 class="patientd-header">Lista de patientros</h5>
-    <div class="patientd-body">
+  <div class="patient list-patient">
+    <h5 class="patient-header">Lista de patientros</h5>
+    <div class="patient-body">
       <table class="table">
         <thead>
           <tr>
@@ -50,9 +51,9 @@
     </div>
   </div>
 
-  <div class="patientd add-patient">
-    <h5 class="patientd-header">Adicionar/Atualizar patientro</h5>
-    <div class="patientd-body">
+  <div class="patient add-patient">
+    <h5 class="patient-header">Adicionar/Atualizar patientro</h5>
+    <div class="patient-body">
       <form
         id="add-form"
         (ngSubmit)="f.form.valid && savePatient(f)"
@@ -70,7 +71,7 @@
             required
             class="form-control"
             [ngClass]="{ 'is-invalid': f.submitted && nome.invalid }"
-            placeholder="Digite o nomeo"
+            placeholder="Digite o nome"
           />
           <div *ngIf="f.submitted && nome.invalid" class="invalid-feedback">
             <div *ngIf="nome.errors.required">Nome é obrigatório</div>
@@ -94,6 +95,63 @@
           </div>
         </div>
         <div>
+          <!-- <input
+            type="checkbox"
+            [(ngModel)]="patient.comorbidade"
+            id="comorbidade"
+            name="comorbidade"
+            #comorbidade="ngModel"
+            required
+            class="form-control"
+            [ngClass]="{ 'is-invalid': f.submitted && comorbidade.invalid }"
+            placeholder="Se tem comorbidade marcar quais, caso negativo marcar negativo"
+          /> -->
+          <div
+            *ngIf="f.submitted && comorbidade.invalid"
+            class="invalid-feedback"
+          >
+            <div *ngIf="comorbidade.errors.required">
+              Esse campo é obrigatório
+            </div>
+          </div>
+          <mat-checkbox [(ngModel)]="patient.comorbidade">Asma</mat-checkbox>
+          <mat-checkbox [(ngModel)]="patient.comorbidade"
+            >Obesidade</mat-checkbox
+          >
+          <mat-checkbox [(ngModel)]="patient.comorbidade"
+            >Diabetes</mat-checkbox
+          >
+          <mat-checkbox [(ngModel)]="patient.comorbidade"
+            >Hipertensão</mat-checkbox
+          >
+          <mat-checkbox [(ngModel)]="patient.comorbidade"
+            >Cardiopatia</mat-checkbox
+          >
+          <mat-checkbox [(ngModel)]="patient.comorbidade"
+            >Não possui</mat-checkbox
+          >
+          >
+        </div>
+        <div>
+          <h4>Basic native select</h4>
+          <mat-form-field appearance="fill">
+            <mat-label>Plano de Saúde</mat-label>
+            <select
+              matNativeControl
+              [(ngModel)]="patient.plano_de_saude"
+              required
+            >
+              <option value="SimplePlan">SimplePlan</option>
+              <option value="Unimed">Unimed</option>
+              <option value="Bradesco">Bradesco</option>
+              <option value="SulAmerica">SulAmerica</option>
+              <option value="Amil">Amil</option>
+              <option value="Vitalis">Vitalis</option>
+              <option value="Nenhum">Nenhum</option>
+            </select>
+          </mat-form-field>
+        </div>
+        <!-- <div>
           <label for="sexo">Sexo</label>
           <mat-radio-group
             aria-label="Sexo"
@@ -112,37 +170,24 @@
           <div *ngIf="f.submitted && sexo.invalid" class="invalid-feedback">
             <div *ngIf="sexo.errors.required">Sexo é obrigatório</div>
           </div>
-        </div>
-        <!-- <div>
-          <mat-form-field
-            appearance="fill"
-            aria-label="Nascimento"
-            [(ngModel)]="patient.nascimento"
-            id="nascimento"
-            name="nascimento"
-            #nascimento="ngModel"
-            required
-            class="form-control"
-            [ngClass]="{ 'is-invalid': f.submitted && nascimento.invalid }"
-            placeholder="---"
-          >
-            <!-- <mat-label>Dia do nascimento</mat-label> 
-            <input matInput [matDatepicker]="picker" />
-            <mat-datepicker-toggle
-              matSuffix
-              [for]="picker"
-            ></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-          </mat-form-field>
-          <div
-            *ngIf="f.submitted && nascimento.invalid"
-            class="invalid-feedback"
-          >
-            <div *ngIf="nascimento.errors.required">
-              Nascimento é obrigatório
-            </div>
+        </div>-->
+        <div>
+          <div>
+            <mat-form-field>
+              <input
+                matInput
+                [matDatepicker]="picker"
+                placeholder="Choose a date"
+              />
+              <mat-datepicker-toggle
+                style="position: relative"
+                matSuffix
+                [for]="picker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
           </div>
-        </div> -->
+        </div>
         <button type="submit" class="btn btn-primary btn-add-patient">
           Salvar
         </button>
